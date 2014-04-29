@@ -15,9 +15,12 @@ Project:
 
     <?php
     define( 'JXL_COOKIE_SECRET_KEY', '54321{ long, random and shared }' );
+    define( 'JXL_COOKIE_DOMAIN', '.juxtalearn.example.org' );
     
     $auth = new JuxtaLearn_Cookie_Authentication();
+    
     $auth->set_required_cookie( 'johndoe', 'teacher' );
+    $auth->set_name_cookie( 'John A. Doe' );
     // ...
 
 ## Usage – authentication slave:
@@ -26,6 +29,7 @@ Project:
     define( 'JXL_COOKIE_SECRET_KEY', '54321{ long, random and shared }' );
     
     $auth = new JuxtaLearn_Cookie_Authentication();
+    
     $result = $auth->parse_cookies();
     if ($auth->is_authenticated()) {
         var_dump( $result[ 'user_login' ] );

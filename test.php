@@ -27,6 +27,7 @@ TEST: parse cookies
 <?php
 
 
+// ClipIt.
 function test_auth_master_delete_cookies() {
     $delete = isset( $_GET['delete'] );
 
@@ -41,7 +42,11 @@ function test_auth_master_delete_cookies() {
 function test_auth_master_set_cookies() {
     $expire = isset($_GET['expire']) ? time() + intval($_GET['expire']) : 0;
 
-    $auth = new JuxtaLearn_Cookie_Authentication();
+    try {
+        $auth = new JuxtaLearn_Cookie_Authentication();
+    } catch (Exception $ex) {
+        die( get_class( $ex ) .' : '. $ex->getMessage() );
+    }
     $set_result = null;
 
     $parse = $auth->parse_cookies();

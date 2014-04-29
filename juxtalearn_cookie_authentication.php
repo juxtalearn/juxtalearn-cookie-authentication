@@ -23,6 +23,8 @@ class JuxtaLearn_Cookie_Authentication {
     const DF_KEY    = 'JXL_COOKIE_SECRET_KEY';
     const DF_DOMAIN = 'JXL_COOKIE_DOMAIN';
 
+    const KEY_MIN_SIZE = 32;
+
     // Our cookie names.
     const CK_TOKEN = 'clipit_token';
     const CK_USER  = 'clipit_user';
@@ -40,6 +42,7 @@ class JuxtaLearn_Cookie_Authentication {
      * The shared secret key and cookie domain can either be set here as parameters
      * to the constructor, or as PHP `define()` constants - see `test.php`
      *
+     * @throws InvalidArgumentException for a missing or too short secret key.
      * @useby auth-master
      * @useby auth-slave 
      */
@@ -52,6 +55,10 @@ class JuxtaLearn_Cookie_Authentication {
         }
         if ('localhost' == $this->cookie_domain) {
             $this->cookie_domain = NULL;
+        }
+        if (strlen( $this->shared_secret_key ) < self::KEY_MIN_SIZE) {
+            throw new InvalidArgumentException(
+                __CLASS__ . ' - {shared_secret_key} is missing or too short.' );
         }
     }
 
