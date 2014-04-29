@@ -2,9 +2,10 @@
 /**
  * Simple HTTP domain cookie creation and authentication.
  *
+ * @license LGPLv2.1+
+ * @copyright 2014 The Open University.
  * @author Nick Freear, 25 April 2014.
  * @author Pablo Llinás Arnaiz
- * @copyright 2014 The Open University.
  * @link   https://gist.github.com/nfreear/9b3431b75a843e839f3c
  * @link   http://tools.ietf.org/html/rfc6265
  */
