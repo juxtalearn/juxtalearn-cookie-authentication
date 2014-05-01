@@ -19,7 +19,7 @@ Project:
     
     $auth = new JuxtaLearn_Cookie_Authentication();
     
-    $auth->set_required_cookie( 'johndoe', 'teacher' );
+    $auth->set_required_cookie( 'johndoe', 'teacher', $user_id = 999 );
     $auth->set_name_cookie( 'John A. Doe' );
     // ...
 
@@ -37,8 +37,10 @@ Project:
     }
 
 ## License
+
 License:  [GNU LGPL v2.1 onwards](http://gnu.org/licenses/lgpl-2.1.html).
 Copyright © 2014 The Open University.
+
 
 [ou-jxl]: https://github.com/IET-OU/oer-evidence-hub-org/tree/quiz/CR1/scaffold
 [End]: http://example
