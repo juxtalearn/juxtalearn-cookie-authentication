@@ -20,10 +20,10 @@ $get_result = test_auth_slave_parse_cookies();
 
 ?><title>Test</title><h1>TEST: JuxtaLearn_Cookie_Authentication</h1><pre>
 TEST: set cookies
--- <?php var_dump( $set_result ) ?>
+-- <?php print_r( $set_result ) ?>
 
 TEST: parse cookies
--- <?php var_dump( $get_result ) ?>
+-- <?php print_r( $get_result ) ?>
 <?php
 
 
@@ -51,8 +51,8 @@ function test_auth_master_set_cookies() {
 
     $parse = $auth->parse_cookies();
     //if (!$auth->is_authenticated()) {
-        $set_result = $auth->set_required_cookie( 'johndoe', 'teacher', $expire );
-        $b_ok = $auth->set_name_cookie( 'John A. Doe', $expire );
+        $set_result = $auth->set_required_cookie( 'pebs123', 'teacher', 999, $expire );
+        $b_ok = $auth->set_name_cookie( 'Pablo Llinás Arnaiz', $expire );
         $b_ok = $auth->set_token_cookie( '0491d9433979a6187a9bc03f868aa104', $expire );
     //}
     return $set_result;

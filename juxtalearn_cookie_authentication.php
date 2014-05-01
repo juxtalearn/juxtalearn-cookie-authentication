@@ -30,8 +30,10 @@ class JuxtaLearn_Cookie_Authentication {
     const CK_USER  = 'clipit_user';
     const CK_NAME  = 'clipit_name';
 
-    const COOKIE_FORMAT = '%hash.login=%login.role=%role.time=%time';
-    const COOKIE_REGEX  = '/^(\w+)\.login=(\w+)\.role=(\w+)\.time=(\d+)$/';
+    const COOKIE_FORMAT = '%hash.%time.login=%login.role=%role.id=%id';
+    const COOKIE_REGEX  =
+        '/^(?P<H>\w+)\.(?P<T>\d+)\.login=(?P<L>\w+)\.role=(?P<R>\w+)\.id=(?P<i>\d*)$/';
+    const COOKIE_REGEX_N  = '/^(\w+)\.(\d+)\.login=(\w+)\.role=(\w+)\.id=(\d*)$/';
 
     private $shared_secret_key;
     protected $cookie_domain;
@@ -66,16 +68,17 @@ class JuxtaLearn_Cookie_Authentication {
      * Called by ClipIt (authentication master), to set an authentication cookie.
      *
      * @param string $user_login The user's login ID, sometimes called a "username".
-     * @param string $user_role  An identifier for the user's role.
+     * @param string $user_role  An identifying string for the user's role.
+     * @param int    $user_id    An optional numeric ID, probably from ClipIt's database,
      * @param int    $expire     The time the cookie expires.
      * @return array Debug information, including input parameters.
-     * @example  $result = $auth->set_required_cookie( 'pebs123', 'teacher' );
+     * @example  $result = $auth->set_required_cookie( 'pebs123', 'teacher', 999 );
      *           var_dump( $result[ 'user_role' ] );
      * @useby auth-master
      */
-    public function set_required_cookie( $user_login, $user_role = 'student', $expire = 0 ) {
+    public function set_required_cookie( $user_login, $user_role = 'student', $user_id = NULL, $expire = 0 ) {
         $timestamp = time();
-        $payload = $this->user_payload( $user_login, $user_role, $timestamp );
+        $payload = $this->user_payload( $user_login, $user_role, $timestamp, $user_id );
         $user_cookie = $this->make_cookie_hash( $timestamp, $payload ) . $payload;
 
         return array(
@@ -86,6 +89,7 @@ class JuxtaLearn_Cookie_Authentication {
             'cookie_domain' => $this->cookie_domain,
             'cookie_path' => '/',
             'user_login' => $user_login,
+            'user_id' => $user_id,
             'user_role' => $user_role,
             'expire' => $expire,
             'time' => $timestamp,
@@ -160,18 +164,19 @@ class JuxtaLearn_Cookie_Authentication {
             'is_authenticated' => false,  // Still false!
             'token_cookie_value' => $token_cookie,
             'user_cookie_value' => $m[0],
-            'hash' => $m[1],
-            'user_login' => $m[2],
-            'user_role' => $m[3],
+            'hash' => $m[ 'H' ],        //$m[1]
+            'user_login' => $m[ 'L' ],  //$m[3] (We've swapped positions.)
+            'user_role' => $m[ 'R' ],   //$m[4]
+            'user_id' => isset($m[ 'i' ]) ? $m[ 'i' ] : NULL, //$m[5]
             'display_name' => $name_cookie,
             'api_token' => $token_cookie,
-            'time' => $m[4],
-            'time_formatted' => $this->cookie_date( $m[4] ),
+            'time' => $m[ 'T' ],   //$m[2]
+            'time_formatted' => $this->cookie_date( $m[ 'T' ] ), //$m[2]
         );
 
         // Try to validate.
         $payload = $this->user_payload(
-            $result['user_login'], $result['user_role'], $result['time'] );
+            $result['user_login'], $result['user_role'], $result['time'], $result['user_id'] );
         $try_hash = $this->make_cookie_hash( $result['time'], $payload );
 
         if ($try_hash != $result['hash']) {
@@ -203,9 +208,9 @@ class JuxtaLearn_Cookie_Authentication {
         return md5( $this->shared_secret_key . $timestamp . $payload );
     }
 
-    function user_payload( $login, $role, $timestamp ) {
+    function user_payload( $login, $role, $timestamp, $user_id = NULL ) {
         return strtr( self::COOKIE_FORMAT, array( '%hash' => '', '%login' => $login,
-            '%role' => $role, '%time' => $timestamp ));
+            '%role' => $role, '%id' => $user_id, '%time' => $timestamp ));
     }
 
     protected function cookie_date( $timestamp ) {
