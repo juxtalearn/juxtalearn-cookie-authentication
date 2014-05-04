@@ -6,12 +6,12 @@ ini_set( 'display_errors', 1 );
 error_reporting( E_ALL );
 date_default_timezone_set( 'GMT' );
 
-require_once './juxtalearn_cookie_authentication.php';
+require_once 'juxtalearn_cookie_authentication.php';
 
-
-define( 'JXL_COOKIE_SECRET_KEY', '54321dcba{ Long, random and shared }' );
-define( 'JXL_COOKIE_DOMAIN', 'localhost' );
-
+if (!defined( 'JXL_COOKIE_SECRET_KEY' )) {
+  define( 'JXL_COOKIE_SECRET_KEY', '54321dcba{ Long, random and shared }' );
+  define( 'JXL_COOKIE_DOMAIN', 'localhost' );
+}
 
 test_auth_master_delete_cookies();
 $set_result = test_auth_master_set_cookies();

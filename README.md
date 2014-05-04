@@ -32,7 +32,7 @@ Project:
     
     $result = $auth->parse_cookies();
     if ($auth->is_authenticated()) {
-        var_dump( $result[ 'user_login' ] );
+        var_dump( $auth->get_user_login() );
         //...
     }
 
