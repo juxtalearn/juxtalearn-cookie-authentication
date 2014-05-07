@@ -206,19 +206,19 @@ class JuxtaLearn_Cookie_Authentication {
      * @useby auth-slave
      */
     public function is_authenticated() {
-        return $this->get_prop( 'is_authenticated' );
+        return $this->get_property( 'is_authenticated' );
     }
 
     public function get_user_login() {
-        return $this->get_prop( 'user_login' );
+        return $this->get_property( 'user_login' );
     }
 
     public function get_api_token() {
-        return $this->get_prop( 'api_token' );
+        return $this->get_property( 'api_token' );
     }
 
-    public function get_prop( $prop ) {
-        return isset($this->parse_r[ $prop ]) ? $this->parse_r[ $prop ] : NULL;
+    public function get_property( $key ) {
+        return isset($this->parse_r[ $key ]) ? $this->parse_r[ $key ] : NULL;
     }
 
     // ==========================================
