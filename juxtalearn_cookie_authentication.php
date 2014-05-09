@@ -49,8 +49,10 @@ class JuxtaLearn_Cookie_Authentication {
      * @useby auth-slave 
      */
     public function __construct( $secret_key = NULL, $cookie_domain = NULL ) {
-        $this->shared_secret_key = $secret_key ? $secret_key : constant(self::DF_KEY);
-        $this->cookie_domain = $cookie_domain ? $cookie_domain : constant(self::DF_DOMAIN);
+        $this->shared_secret_key = $secret_key ? $secret_key :
+                defined(self::DF_KEY) ? constant(self::DF_KEY) : NULL;
+        $this->cookie_domain = $cookie_domain ? $cookie_domain :
+                defined(self::DF_DOMAIN) ? constant(self::DF_DOMAIN) : NULL;
 
         if (!$this->cookie_domain) {
             $this->cookie_domain = '.juxtalearn.org';
