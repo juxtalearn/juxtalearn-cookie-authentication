@@ -23,7 +23,7 @@ class JuxtaLearn_Cookie_Authentication {
     const DF_KEY    = 'JXL_COOKIE_SECRET_KEY';
     const DF_DOMAIN = 'JXL_COOKIE_DOMAIN';
 
-    const KEY_MIN_SIZE = 32;
+    const KEY_MIN_SIZE = 10;  //Ideally: 32+
 
     // Our cookie names.
     const CK_TOKEN = 'clipit_token';
@@ -49,10 +49,10 @@ class JuxtaLearn_Cookie_Authentication {
      * @useby auth-slave 
      */
     public function __construct( $secret_key = NULL, $cookie_domain = NULL ) {
-        $this->shared_secret_key = $secret_key ? $secret_key :
-                defined(self::DF_KEY) ? constant(self::DF_KEY) : NULL;
-        $this->cookie_domain = $cookie_domain ? $cookie_domain :
-                defined(self::DF_DOMAIN) ? constant(self::DF_DOMAIN) : NULL;
+        $this->shared_secret_key = $secret_key ? $secret_key : (
+                defined(self::DF_KEY) ? constant(self::DF_KEY) : NULL );
+        $this->cookie_domain = $cookie_domain ? $cookie_domain : (
+                defined(self::DF_DOMAIN) ? constant(self::DF_DOMAIN) : NULL );
 
         if (!$this->cookie_domain) {
             $this->cookie_domain = '.juxtalearn.org';
