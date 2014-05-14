@@ -55,6 +55,7 @@ function test_auth_master_set_cookies() {
     try {
         $auth = create_cookie_auth();
     } catch (Exception $ex) {
+        // Handle errors, for example, missing shared key.
         die( get_class( $ex ) .' : '. $ex->getMessage() );
     }
     $set_result = null;

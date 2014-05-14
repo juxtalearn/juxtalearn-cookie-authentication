@@ -17,7 +17,11 @@ Project:
     define( 'JXL_COOKIE_SECRET_KEY', '54321{ long, random and shared }' );
     define( 'JXL_COOKIE_DOMAIN', '.juxtalearn.example.org' );
     
-    $auth = new JuxtaLearn_Cookie_Authentication();
+    try {
+        $auth = new JuxtaLearn_Cookie_Authentication();
+    } catch (Exception $e) {
+        die( 'Error: '. $e->getMessage() );  // Handle errors...
+    }
     
     $auth->set_required_cookie( 'johndoe', 'teacher', $user_id = 999 );
     $auth->set_name_cookie( 'John A. Doe' );
