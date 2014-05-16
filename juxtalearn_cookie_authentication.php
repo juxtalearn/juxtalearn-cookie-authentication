@@ -11,9 +11,10 @@
  */
 
 /*
-Questions:
+Questions/ TODOs:
   - What is the maximum allowed length of the user-login (username)?
   - What characters can the user-login contain? (Example, spaces, punctuation?)
+  - 'user_role' is now optional (2014-05-16). This needs review.
 */
 
 
@@ -30,9 +31,10 @@ class JuxtaLearn_Cookie_Authentication {
     const CK_USER  = 'clipit_user';
     const CK_NAME  = 'clipit_name';
 
+    // TODO: role is now optional (2014-05-16).
     const COOKIE_FORMAT = '%hash.%time.login=%login.role=%role.id=%id';
     const COOKIE_REGEX  =
-        '/^(?P<H>\w+)\.(?P<T>\d+)\.login=(?P<L>\w+)\.role=(?P<R>\w+)\.id=(?P<i>\d*)$/';
+        '/^(?P<H>\w+)\.(?P<T>\d+)\.login=(?P<L>\w+)\.role=(?P<R>\w*)\.id=(?P<i>\d*)$/';
     const COOKIE_REGEX_N  = '/^(\w+)\.(\d+)\.login=(\w+)\.role=(\w+)\.id=(\d*)$/';
 
     private $shared_secret_key;
@@ -168,7 +170,7 @@ class JuxtaLearn_Cookie_Authentication {
             'user_cookie_value' => $m[0],
             'hash' => $m[ 'H' ],        //$m[1]
             'user_login' => $m[ 'L' ],  //$m[3] (We've swapped positions.)
-            'user_role' => $m[ 'R' ],   //$m[4]
+            'user_role'=>isset($m[ 'R' ]) ? $m[ 'R' ] : NULL, //$m[4]
             'user_id' => isset($m[ 'i' ]) ? $m[ 'i' ] : NULL, //$m[5]
             'display_name' => $name_cookie,
             'api_token' => $token_cookie,
