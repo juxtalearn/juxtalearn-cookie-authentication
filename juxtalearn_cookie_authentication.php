@@ -35,7 +35,6 @@ class JuxtaLearn_Cookie_Authentication {
     const COOKIE_FORMAT = '%hash.%time.login=%login.role=%role.id=%id';
     const COOKIE_REGEX  =
         '/^(?P<H>\w+)\.(?P<T>\d+)\.login=(?P<L>\w+)\.role=(?P<R>\w*)\.id=(?P<i>\d*)$/';
-    const COOKIE_REGEX_N  = '/^(\w+)\.(\d+)\.login=(\w+)\.role=(\w+)\.id=(\d*)$/';
 
     private $shared_secret_key;
     protected $cookie_domain;
@@ -159,6 +158,9 @@ class JuxtaLearn_Cookie_Authentication {
         // Try to extract data.
         if (!preg_match( self::COOKIE_REGEX, $_COOKIE[self::CK_USER], $m )) {
             $this->parse_r['msg'] = 'Error, unexpected user-cookie format.';
+            $this->parse_r['cookie'] = $_COOKIE[self::CK_USER];
+            $this->parse_r['regex'] = self::COOKIE_REGEX;
+            $this->parse_r['regex_matches'] = $m;
             return $this->parse_r;
         }
 
