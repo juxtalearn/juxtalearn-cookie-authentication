@@ -2,49 +2,39 @@
  * Parse JuxtaLearn cookies, and display the user's name etc.
  *
  * IMPORTANT: this is not an "authentication" library.
- * You should protect sensitive pages with the JuxtaLearn_Cookie_Authentication PHP library.
+ * You should protect sensitive pages using the JuxtaLearn_Cookie_Authentication PHP library.
  */
 
-var JXL_cookies = JXL_cookies || {};
+function JXL_Cookie() {
 
-(function () {
+  'use strict';
 
-  var
-    JC = JXL_cookies;
-    result;
+  var result = parse_cookies();
 
-  JC.display_login = function (selector) {
+  function get_property(key) {
+    if (!key) { return result; }
+    return result && result[key];
+  }
+
+  function display_login(selector) {
     var el = document.querySelector(selector);
-    if (el && result && result.is_authenticated) { 
+    if (el && result && result.is_authenticated) {
       el.innerHTML = "Logged in as: " + result.display_name;
     }
   }
 
-  JC.get_cookie = function (name) {
-      //https://developer.mozilla.org/en-US/docs/Web/API/document.cookie
-      //document.cookie.replace(/(?:(?:^|.*;\s*)test2\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-      var regex = new RegExp("" + name + "\s*\=\s*([^;]*)(.*$|^.*$)"),
-        matches = regex.exec(document.cookie);
-
-      //console.log(regex.exec(document.cookie));
-      return matches && decodeURIComponent(matches[ 1 ]).replace(/\+/g, " ");
-  }
-
-  JC.parse_cookies = function () {
+  function parse_cookies() {
     var
-      ck_user = JC.get_cookie("clipit_user"),
-      ck_name = JC.get_cookie("clipit_name"),
-      ck_token= JC.get_cookie("clipit_token"),
+      ck_user = get_cookie("clipit_user"),
+      ck_name = get_cookie("clipit_name"),
+      ck_token = get_cookie("clipit_token"),
       user_re = /^(\w{10,})\.(\d{9,})\.login=(\w+)\.role=(\w*)\.id=(\d*)$/,
-      matches = user_re.exec(ck_user);
+      matches = user_re.exec(ck_user),
+      parse_r = { is_authenticated: false };
 
-    result = { is_authenticated: false };
+    if (!matches) { return parse_r; }
 
-    //console.log(ck_user, user_re.exec(ck_user));
-
-    if (!matches) return result;
-
-    result = {
+    parse_r = {
       is_authenticated: true,
       display_name: ck_name,
       api_token:  ck_token,
@@ -55,8 +45,20 @@ var JXL_cookies = JXL_cookies || {};
       timestamp:  matches[ 2 ],
       regex:      user_re
     };
-	return result;
+    return parse_r;
   }
 
-})();
+  function get_cookie(key) {
+    //https://developer.mozilla.org/en-US/docs/Web/API/document.cookie
+    //document.cookie.replace(/(?:(?:^|.*;\s*)test2\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+    var regex = new RegExp("" + key + "\s*\=\s*([^;]*)(.*$|^.*$)"),
+      matches = regex.exec(document.cookie);
+    return matches && decodeURIComponent(matches[ 1 ]).replace(/\+/g, " ");
+  }
 
+  return {
+    get_cookie: get_cookie,
+    display_login: display_login,
+    get: get_property
+  };
+}
