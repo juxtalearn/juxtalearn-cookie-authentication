@@ -25,6 +25,7 @@ Project:
     
     $auth->set_required_cookie( 'johndoe', 'teacher', $user_id = 999 );
     $auth->set_name_cookie( 'John A. Doe' );
+    $auth->set_mail_cookie( 'jad@example.org' );
     // ...
 
 ## Usage – authentication slave:

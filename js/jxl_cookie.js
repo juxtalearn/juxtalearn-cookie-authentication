@@ -26,8 +26,6 @@ function JXL_Cookie() {
   function parse_cookies() {
     var
       ck_user = get_cookie("clipit_user"),
-      ck_name = get_cookie("clipit_name"),
-      ck_token = get_cookie("clipit_token"),
       user_re = /^(\w{10,})\.(\d{9,})\.login=(\w+)\.role=(\w*)\.id=(\d*)$/,
       matches = user_re.exec(ck_user),
       parse_r = { is_authenticated: false };
@@ -36,8 +34,9 @@ function JXL_Cookie() {
 
     parse_r = {
       is_authenticated: true,
-      display_name: ck_name,
-      api_token:  ck_token,
+      display_name: get_cookie("clipit_name"),
+      api_token:  get_cookie("clipit_token"),
+      user_mail:  get_cookie("clipit_mail")
       user_login: matches[ 3 ],
       user_role:  matches[ 4 ],
       user_id:    matches[ 5 ],
