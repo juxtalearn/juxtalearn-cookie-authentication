@@ -3,7 +3,11 @@
  *
  * IMPORTANT: this is not an "authentication" library.
  * You should protect sensitive pages using the JuxtaLearn_Cookie_Authentication PHP library.
+ * @copyright 2014 The Open University.
  */
+
+/*jslint white: true, indent: 2 */
+/*global document:false, get_cookie, parse_cookies */
 
 function JXL_Cookie() {
 
@@ -36,7 +40,7 @@ function JXL_Cookie() {
       is_authenticated: true,
       display_name: get_cookie("clipit_name"),
       api_token:  get_cookie("clipit_token"),
-      user_mail:  get_cookie("clipit_mail")
+      user_mail:  get_cookie("clipit_mail"),
       user_login: matches[ 3 ],
       user_role:  matches[ 4 ],
       user_id:    matches[ 5 ],
@@ -50,7 +54,7 @@ function JXL_Cookie() {
   function get_cookie(key) {
     //https://developer.mozilla.org/en-US/docs/Web/API/document.cookie
     //document.cookie.replace(/(?:(?:^|.*;\s*)test2\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-    var regex = new RegExp("" + key + "\s*\=\s*([^;]*)(.*$|^.*$)"),
+    var regex = new RegExp("" + key + "\\s*\\=\\s*([^;]*)(.*$|^.*$)"),
       matches = regex.exec(document.cookie);
     return matches && decodeURIComponent(matches[ 1 ]).replace(/\+/g, " ");
   }
